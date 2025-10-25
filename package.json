@@ -1,0 +1,31 @@
+{
+  "name": "cloud-asset-hub",
+  "version": "1.0.0",
+  "description": "Cloud Asset Hub — manage your user files and assets with Supabase",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "security": "snyk test || true"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.76.1",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "eslint": "latest",
+    "eslint-config-next": "latest",
+    "husky": "^9.1.7",
+    "postcss": "^8.5.6",
+    "snyk": "^1.1300.1",
+    "tailwindcss": "^4.1.16"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,112 @@
+globalThis.__BUILD_MANIFEST = {
+  "pages": {
+    "/": [
+      "static/chunks/node_modules_@supabase_node-fetch_browser_bcf6ea59.js",
+      "static/chunks/node_modules_next_dist_compiled_44618872._.js",
+      "static/chunks/node_modules_next_dist_shared_lib_4025f6b7._.js",
+      "static/chunks/node_modules_next_dist_client_3ede7da4._.js",
+      "static/chunks/node_modules_next_dist_6024eba3._.js",
+      "static/chunks/node_modules_next_5cb05f67._.js",
+      "static/chunks/node_modules_react-dom_4411d9bd._.js",
+      "static/chunks/node_modules_@supabase_storage-js_dist_module_31f51af0._.js",
+      "static/chunks/node_modules_@supabase_auth-js_dist_module_e0400d86._.js",
+      "static/chunks/node_modules_7352e297._.js",
+      "static/chunks/[root-of-the-server]__c26bdd16._.js",
+      "static/chunks/pages_index_2da965e7._.js",
+      "static/chunks/turbopack-pages_index_a375d64c._.js"
+    ],
+    "/_app": [
+      "static/chunks/node_modules_next_dist_compiled_c629999b._.js",
+      "static/chunks/node_modules_next_dist_shared_lib_82dc2e9d._.js",
+      "static/chunks/node_modules_next_dist_client_d0aa886c._.js",
+      "static/chunks/node_modules_next_dist_6024eba3._.js",
+      "static/chunks/node_modules_react-dom_4411d9bd._.js",
+      "static/chunks/node_modules_f1be3ba2._.js",
+      "static/chunks/[root-of-the-server]__01feb856._.js",
+      "static/chunks/styles_globals_dc36e6c9.css",
+      "static/chunks/pages__app_2da965e7._.js",
+      "static/chunks/turbopack-pages__app_676f2a93._.js"
+    ],
+    "/_error": [
+      "static/chunks/node_modules_next_dist_compiled_c629999b._.js",
+      "static/chunks/node_modules_next_dist_shared_lib_cf5b50a6._.js",
+      "static/chunks/node_modules_next_dist_client_d0aa886c._.js",
+      "static/chunks/node_modules_next_dist_19fd0646._.js",
+      "static/chunks/node_modules_next_error_1cfbb379.js",
+      "static/chunks/[next]_entry_page-loader_ts_43b523b5._.js",
+      "static/chunks/node_modules_react-dom_4411d9bd._.js",
+      "static/chunks/node_modules_7f09fef0._.js",
+      "static/chunks/[root-of-the-server]__092393de._.js",
+      "static/chunks/pages__error_2da965e7._.js",
+      "static/chunks/turbopack-pages__error_91f36f75._.js"
+    ],
+    "/dashboard": [
+      "static/chunks/node_modules_@supabase_node-fetch_browser_bcf6ea59.js",
+      "static/chunks/node_modules_next_dist_compiled_44618872._.js",
+      "static/chunks/node_modules_next_dist_shared_lib_4025f6b7._.js",
+      "static/chunks/node_modules_next_dist_client_3ede7da4._.js",
+      "static/chunks/node_modules_next_dist_6024eba3._.js",
+      "static/chunks/node_modules_next_5cb05f67._.js",
+      "static/chunks/node_modules_react-dom_4411d9bd._.js",
+      "static/chunks/node_modules_@supabase_storage-js_dist_module_31f51af0._.js",
+      "static/chunks/node_modules_@supabase_auth-js_dist_module_e0400d86._.js",
+      "static/chunks/node_modules_7352e297._.js",
+      "static/chunks/[root-of-the-server]__b9254aae._.js",
+      "static/chunks/pages_dashboard_2da965e7._.js",
+      "static/chunks/turbopack-pages_dashboard_ede60706._.js"
+    ],
+    "/profile": [
+      "static/chunks/node_modules_@supabase_node-fetch_browser_bcf6ea59.js",
+      "static/chunks/node_modules_next_dist_compiled_44618872._.js",
+      "static/chunks/node_modules_next_dist_shared_lib_4025f6b7._.js",
+      "static/chunks/node_modules_next_dist_client_3ede7da4._.js",
+      "static/chunks/node_modules_next_dist_6024eba3._.js",
+      "static/chunks/node_modules_next_87234b82._.js",
+      "static/chunks/node_modules_react-dom_4411d9bd._.js",
+      "static/chunks/node_modules_@supabase_storage-js_dist_module_31f51af0._.js",
+      "static/chunks/node_modules_@supabase_auth-js_dist_module_e0400d86._.js",
+      "static/chunks/node_modules_7352e297._.js",
+      "static/chunks/[root-of-the-server]__2a7bfd76._.js",
+      "static/chunks/pages_profile_2da965e7._.js",
+      "static/chunks/turbopack-pages_profile_2df962d5._.js"
+    ],
+    "/reset-password": [
+      "static/chunks/node_modules_@supabase_node-fetch_browser_bcf6ea59.js",
+      "static/chunks/node_modules_next_dist_compiled_44618872._.js",
+      "static/chunks/node_modules_next_dist_shared_lib_4025f6b7._.js",
+      "static/chunks/node_modules_next_dist_client_3ede7da4._.js",
+      "static/chunks/node_modules_next_dist_6024eba3._.js",
+      "static/chunks/node_modules_next_5cb05f67._.js",
+      "static/chunks/node_modules_react-dom_4411d9bd._.js",
+      "static/chunks/node_modules_@supabase_storage-js_dist_module_31f51af0._.js",
+      "static/chunks/node_modules_@supabase_auth-js_dist_module_e0400d86._.js",
+      "static/chunks/node_modules_7352e297._.js",
+      "static/chunks/[root-of-the-server]__a2c922d1._.js",
+      "static/chunks/pages_reset-password_2da965e7._.js",
+      "static/chunks/turbopack-pages_reset-password_3c7b6607._.js"
+    ],
+    "/signup": [
+      "static/chunks/node_modules_@supabase_node-fetch_browser_bcf6ea59.js",
+      "static/chunks/node_modules_next_dist_compiled_44618872._.js",
+      "static/chunks/node_modules_next_dist_shared_lib_4025f6b7._.js",
+      "static/chunks/node_modules_next_dist_client_3ede7da4._.js",
+      "static/chunks/node_modules_next_dist_6024eba3._.js",
+      "static/chunks/node_modules_next_5cb05f67._.js",
+      "static/chunks/node_modules_react-dom_4411d9bd._.js",
+      "static/chunks/node_modules_@supabase_storage-js_dist_module_31f51af0._.js",
+      "static/chunks/node_modules_@supabase_auth-js_dist_module_e0400d86._.js",
+      "static/chunks/node_modules_7352e297._.js",
+      "static/chunks/[root-of-the-server]__0e6eec6a._.js",
+      "static/chunks/pages_signup_2da965e7._.js",
+      "static/chunks/turbopack-pages_signup_ef0f1fb4._.js"
+    ]
+  },
+  "devFiles": [],
+  "polyfillFiles": [],
+  "lowPriorityFiles": [],
+  "rootMainFiles": []
+};
+globalThis.__BUILD_MANIFEST.lowPriorityFiles = [
+"/static/" + process.env.__NEXT_BUILD_ID + "/_buildManifest.js",
+"/static/" + process.env.__NEXT_BUILD_ID + "/_ssgManifest.js"
+];

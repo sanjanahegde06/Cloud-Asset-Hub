@@ -1,0 +1,5 @@
+{
+  "/reset-password": [
+    "static/chunks/pages/reset-password.js"
+  ]
+}
