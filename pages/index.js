@@ -44,10 +44,19 @@ export default function Login() {
       setError(null);
       setSuccess(null);
 
-      // IMPORTANT: Update 'window.location.origin' if this is a static export
+      // === START OF CRITICAL CHANGE ===
+      
+      // 1. Determine the Base URL: Use the VERCEL_URL if in production, otherwise use window.location.origin (for localhost)
+      const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL 
+        ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+        : window.location.origin;
+
+      // 2. Call Supabase with the correct production URL
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`, 
+        redirectTo: `${baseUrl}/reset-password`, 
       });
+
+      // === END OF CRITICAL CHANGE ===
 
       if (error) throw error;
 
