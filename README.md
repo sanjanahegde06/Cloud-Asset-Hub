@@ -1,6 +1,6 @@
 # Cloud Asset Hub
 
-Cloud Asset Hub (previously "Cloud Resource Manager") — a Next.js app using Supabase Auth and Storage to upload, preview, download and manage user files.
+Cloud Asset Hub — a Next.js app using Supabase Auth and Storage to upload, preview, download and manage user files.
 
 ## Overview
 Cloud Asset Hub is a Next.js application that allows users to manage their files in the cloud using Supabase for authentication and storage. Users can sign up, log in, upload files, and view or delete their uploaded files from a user-friendly dashboard.
