@@ -69,5 +69,3 @@ cloud-asset-hub
 - Use the signup page to create a new account or log in with an existing account.
 - Once logged in, you can upload files, view your uploaded files, and delete them as needed.
 
-## License
-This project is licensed under the MIT License.
