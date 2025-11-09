@@ -1,9 +1,4 @@
-/* Final Global CSS: VERY SLIGHTLY SMALLER Login, Signup, and Dashboard Styles */
-
-/* ---------------------------------- */
 /* --- LOGIN/SIGNUP PAGE STYLES --- */
-/* ---------------------------------- */
-
 /* Apply full-screen background and centering to both login and signup pages */
 .login-page, .auth-container {
    min-height: 100vh;
