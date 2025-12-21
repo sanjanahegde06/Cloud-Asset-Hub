@@ -35,6 +35,24 @@ export default function FileList({ files = [], onDelete, onRefresh }) {
     return 'application/octet-stream'
   }
 
+  const isAllowedSupabaseUrl = (maybeUrl) => {
+    try {
+      if (typeof maybeUrl !== 'string' || !maybeUrl) return false
+      const target = new URL(maybeUrl)
+
+      // Only allow http(s) URLs.
+      if (target.protocol !== 'https:' && target.protocol !== 'http:') return false
+
+      const base = process.env.NEXT_PUBLIC_SUPABASE_URL
+      if (typeof base !== 'string' || !base) return false
+      const allowedOrigin = new URL(base).origin
+
+      return target.origin === allowedOrigin
+    } catch {
+      return false
+    }
+  }
+
   const handleDelete = async (fileName) => {
     if (!fileName) return
     try {
@@ -95,36 +113,13 @@ export default function FileList({ files = [], onDelete, onRefresh }) {
       if (!session?.user) throw new Error('Not authenticated')
       const filePath = `${session.user.id}/${file.name}`
 
-      const { data: signedData, error: signedErr } = await supabase.storage
-        .from('uploads')
-        .createSignedUrl(filePath, 60)
+      // Always download and preview via a local blob URL (avoids navigating to external URLs).
+      const { data, error } = await supabase.storage.from('uploads').download(filePath)
+      if (error) throw error
 
-      if (signedErr || !signedData?.signedURL) {
-        const { data, error } = await supabase.storage.from('uploads').download(filePath)
-        if (error) throw error
-        const url = window.URL.createObjectURL(data)
-        const type = data.type || (file.metadata?.mimetype) || getMimeFromName(file.name)
-        // open full-screen preview for images/pdf and blob fallback
-        setPreview({ open: true, url, type, name: file.name, full: true })
-        return
-      }
-
-      const url = signedData.signedURL
-      let contentType = ''
-      try {
-        const head = await fetch(url, { method: 'HEAD' })
-        contentType = head.headers.get('content-type') || ''
-      } catch (e) {
-        // ignore
-      }
-
-      const type = contentType || file.metadata?.mimetype || getMimeFromName(file.name)
-
-      if (type.startsWith('image/') || type === 'application/pdf') {
-        setPreview({ open: true, url, type, name: file.name, full: true })
-      } else {
-        window.open(url, '_blank', 'noopener')
-      }
+      const url = window.URL.createObjectURL(data)
+      const type = data.type || file.metadata?.mimetype || getMimeFromName(file.name)
+      setPreview({ open: true, url, type, name: file.name, full: true })
     } catch (err) {
       setError(err?.message || String(err))
     } finally {

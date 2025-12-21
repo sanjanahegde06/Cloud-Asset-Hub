@@ -5,16 +5,16 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "next lint",
     "security": "snyk test || true"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.76.1",
-    "next": "latest",
-    "react": "latest",
-    "react-dom": "latest"
+    "next": "16.1.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",
