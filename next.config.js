@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  allowedDevOrigins: ['http://10.141.22.120'],
+	// Next.js expects hostnames here (no scheme/port)
+	allowedDevOrigins: ['localhost', '127.0.0.1', '10.239.198.120'],
 }
 
 module.exports = nextConfig
