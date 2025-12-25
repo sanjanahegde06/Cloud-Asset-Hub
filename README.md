@@ -28,8 +28,10 @@ cloud-asset-hub
 │   │   ├── delete.js
 │   │   ├── files.js
 │   │   └── upload.js
-│   ├── dashboard.js
+|   ├── dashboard.js
 │   ├── index.js
+│   ├── profile.js
+|   ├── reset-password.ja
 │   └── signup.js
 ├── public
 ├── styles
