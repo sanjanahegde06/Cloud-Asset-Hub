@@ -1,18 +1,21 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import PreviewModal from './PreviewModal'
 
 export default function FileList({ files = [], onDelete, onRefresh }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [success, setSuccess] = useState(null)
   const [preview, setPreview] = useState({ open: false, url: '', type: '', name: '', full: false })
+
+  const [openMenuFor, setOpenMenuFor] = useState(null)
 
   // sorting state
   const [sortBy, setSortBy] = useState('name') // 'name' | 'size' | 'ext' | 'date'
   const [sortDir, setSortDir] = useState('asc') // 'asc' | 'desc'
 
   // sanitize and dedupe by name to avoid double entries and undefined items
-  const sanitizedFiles = Array.from(
+  const sanitizedFiles = useMemo(() => Array.from(
     new Map(
       (files || [])
         .filter(Boolean)
@@ -25,7 +28,27 @@ export default function FileList({ files = [], onDelete, onRefresh }) {
     _size: Number(f.size || f.metadata?.size || 0) || 0,
     _ext: (f.name || '').split('.').pop()?.toLowerCase() || '',
     _date: new Date(f.updated_at || f.created_at || 0).getTime() || 0,
-  }))
+  })), [files])
+
+  useEffect(() => {
+    if (!openMenuFor) return
+
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') setOpenMenuFor(null)
+    }
+
+    const onPointerDown = () => {
+      // Any click outside will close; menu itself stops propagation.
+      setOpenMenuFor(null)
+    }
+
+    document.addEventListener('keydown', onKeyDown)
+    document.addEventListener('pointerdown', onPointerDown)
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      document.removeEventListener('pointerdown', onPointerDown)
+    }
+  }, [openMenuFor])
 
   const getMimeFromName = (name = '') => {
     const ext = name.split('.').pop()?.toLowerCase() || ''
@@ -58,6 +81,7 @@ export default function FileList({ files = [], onDelete, onRefresh }) {
     try {
       setLoading(true)
       setError(null)
+      setSuccess(null)
 
       const { data: { session } } = await supabase.auth.getSession()
       if (!session?.user) throw new Error('Not authenticated')
@@ -68,6 +92,7 @@ export default function FileList({ files = [], onDelete, onRefresh }) {
 
       if (onDelete) onDelete(fileName)
       if (onRefresh) onRefresh()
+      setSuccess('File deleted.')
     } catch (err) {
       setError(err?.message || String(err))
     } finally {
@@ -80,6 +105,7 @@ export default function FileList({ files = [], onDelete, onRefresh }) {
     try {
       setLoading(true)
       setError(null)
+      setSuccess(null)
 
       const { data: { session } } = await supabase.auth.getSession()
       if (!session?.user) throw new Error('Not authenticated')
@@ -96,6 +122,68 @@ export default function FileList({ files = [], onDelete, onRefresh }) {
       a.click()
       document.body.removeChild(a)
       window.URL.revokeObjectURL(url)
+      setSuccess('Download started.')
+    } catch (err) {
+      setError(err?.message || String(err))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const copyToClipboard = async (text) => {
+    // Clipboard API can fail on non-HTTPS or due to permissions, so keep a fallback.
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text)
+        return true
+      }
+    } catch {
+      // fallback below
+    }
+
+    try {
+      const input = document.createElement('input')
+      input.value = text
+      input.setAttribute('readonly', 'true')
+      input.style.position = 'absolute'
+      input.style.left = '-9999px'
+      document.body.appendChild(input)
+      input.select()
+      document.execCommand('copy')
+      document.body.removeChild(input)
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const handleShare = async (fileName) => {
+    if (!fileName) return
+    try {
+      setLoading(true)
+      setError(null)
+      setSuccess(null)
+
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.user) throw new Error('Not authenticated')
+
+      const filePath = `${session.user.id}/${fileName}`
+      const { data, error } = await supabase.storage.from('uploads').createSignedUrl(filePath, 60 * 30)
+      if (error) throw error
+      const signedUrl = data?.signedUrl
+      if (!signedUrl) throw new Error('Could not create share link')
+
+      // Prefer native share sheet on mobile, but still copy for convenience.
+      if (typeof navigator !== 'undefined' && navigator.share) {
+        try {
+          await navigator.share({ title: fileName, text: 'Shared from Cloud Asset Hub', url: signedUrl })
+        } catch {
+          // user cancelled, ignore
+        }
+      }
+
+      const copied = await copyToClipboard(signedUrl)
+      setSuccess(copied ? 'Share link copied to clipboard.' : 'Share link created (copy manually): ' + signedUrl)
     } catch (err) {
       setError(err?.message || String(err))
     } finally {
@@ -108,6 +196,7 @@ export default function FileList({ files = [], onDelete, onRefresh }) {
     try {
       setLoading(true)
       setError(null)
+      setSuccess(null)
 
       const { data: { session } } = await supabase.auth.getSession()
       if (!session?.user) throw new Error('Not authenticated')
@@ -119,7 +208,7 @@ export default function FileList({ files = [], onDelete, onRefresh }) {
 
       const url = window.URL.createObjectURL(data)
       const type = data.type || file.metadata?.mimetype || getMimeFromName(file.name)
-      setPreview({ open: true, url, type, name: file.name, full: true })
+      setPreview({ open: true, url, type, name: file.name, full: false })
     } catch (err) {
       setError(err?.message || String(err))
     } finally {
@@ -175,6 +264,7 @@ export default function FileList({ files = [], onDelete, onRefresh }) {
   return (
     <div className="file-list">
       {error && <p className="error">{error}</p>}
+      {success && <p className="success">{success}</p>}
 
       <div className="file-list-controls">
         <label style={{ fontSize: '1.4rem' }}>
@@ -205,8 +295,67 @@ export default function FileList({ files = [], onDelete, onRefresh }) {
 
             <div className="actions">
               <button onClick={() => handleView(file)} disabled={loading}>View</button>
-              <button onClick={() => handleDownload(file.name)} disabled={loading}>Download</button>
-              <button onClick={() => handleDelete(file.name)} disabled={loading} className="delete">Delete</button>
+
+              <button
+                type="button"
+                className="three-dot-btn"
+                aria-label={`Open actions menu for ${file.name}`}
+                aria-haspopup="menu"
+                aria-expanded={openMenuFor === file.name}
+                disabled={loading}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setOpenMenuFor((cur) => (cur === file.name ? null : file.name))
+                }}
+              >
+                ⋯
+              </button>
+
+              {openMenuFor === file.name && (
+                <div
+                  className="file-menu"
+                  role="menu"
+                  aria-label={`File actions for ${file.name}`}
+                  onPointerDown={(e) => e.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    className="file-menu-item"
+                    role="menuitem"
+                    disabled={loading}
+                    onClick={async () => {
+                      setOpenMenuFor(null)
+                      await handleDownload(file.name)
+                    }}
+                  >
+                    Download
+                  </button>
+                  <button
+                    type="button"
+                    className="file-menu-item"
+                    role="menuitem"
+                    disabled={loading}
+                    onClick={async () => {
+                      setOpenMenuFor(null)
+                      await handleShare(file.name)
+                    }}
+                  >
+                    Share
+                  </button>
+                  <button
+                    type="button"
+                    className="file-menu-item delete"
+                    role="menuitem"
+                    disabled={loading}
+                    onClick={async () => {
+                      setOpenMenuFor(null)
+                      await handleDelete(file.name)
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
             </div>
           </li>
         ))}
@@ -218,6 +367,7 @@ export default function FileList({ files = [], onDelete, onRefresh }) {
         type={preview.type}
         name={preview.name}
         full={preview.full}
+        onToggleFull={() => setPreview((p) => ({ ...p, full: !p.full }))}
         onClose={() => {
           if (preview.url && preview.url.startsWith('blob:')) {
             window.URL.revokeObjectURL(preview.url)
