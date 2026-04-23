@@ -1,4 +1,4 @@
-// index.js (Dashboard)
+// pages/dashboard.js
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -6,12 +6,18 @@ import { supabase } from '../lib/supabaseClient';
 import ProtectedRoute from '../components/ProtectedRoute';
 import UploadForm from '../components/UploadForm';
 import FileList from '../components/FileList';
+import PreviewModal from '../components/PreviewModal'; // Import the modal
 
 export default function Dashboard() {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  
+  // Modal States
+  const [previewFile, setPreviewFile] = useState(null);
+  const [isPreviewFull, setIsPreviewFull] = useState(false);
+
   const router = useRouter();
 
   const fetchUser = async () => {
@@ -31,13 +37,16 @@ export default function Dashboard() {
       }
 
       const res = await supabase.storage.from('uploads').list(session.user.id);
-      console.debug('supabase.storage.list response:', res);
-
+      
       if (res.error) throw res.error;
       const sanitized = (res.data || [])
         .filter(Boolean)
         .filter(f => typeof f.name === 'string')
-        .sort((a, b) => (b.updated_at || 0) - (a.updated_at || 0));
+        .sort((a, b) => {
+           const dateA = new Date(a.updated_at || 0);
+           const dateB = new Date(b.updated_at || 0);
+           return dateB - dateA;
+        });
 
       setFiles(sanitized);
     } catch (err) {
@@ -57,7 +66,10 @@ export default function Dashboard() {
     router.push('/');
   };
 
-  const totalFiles = (files || []).length;
+  // Helper to handle the preview logic passed to FileList
+  const handlePreview = (file) => {
+    setPreviewFile(file);
+  };
 
   return (
     <ProtectedRoute>
@@ -95,11 +107,32 @@ export default function Dashboard() {
               ) : error ? (
                 <p className="error">{error}</p>
               ) : (
-                <FileList files={files} onDelete={() => fetchFiles()} onRefresh={fetchFiles} />
+                <FileList 
+                  files={files} 
+                  onDelete={fetchFiles} 
+                  onRefresh={fetchFiles}
+                  onPreview={handlePreview} // Ensure FileList uses this
+                />
               )}
             </section>
           </main>
         </div>
+
+        {/* Modal Logic Integration */}
+        {previewFile && (
+          <PreviewModal
+            open={!!previewFile}
+            url={previewFile.url}
+            type={previewFile.type}
+            name={previewFile.name}
+            full={isPreviewFull}
+            onClose={() => {
+              setPreviewFile(null);
+              setIsPreviewFull(false);
+            }}
+            onToggleFull={() => setIsPreviewFull(!isPreviewFull)}
+          />
+        )}
       </div>
     </ProtectedRoute>
   );

@@ -1,3 +1,4 @@
+// components/PreviewModal.js
 import React, { useEffect, useRef, useState } from 'react'
 
 export default function PreviewModal({ open, url, type, name, full = false, onClose, onToggleFull }) {
@@ -36,19 +37,28 @@ export default function PreviewModal({ open, url, type, name, full = false, onCl
   }
 
   const handleToggleFullscreen = async () => {
-    // Prefer real fullscreen (entire screen). If not supported, fall back to CSS full mode.
     if (document.fullscreenElement) {
       await exitNativeFullscreen()
       return
     }
 
     const entered = await requestNativeFullscreen()
-    if (!entered && typeof onToggleFull === 'function') onToggleFull()
+    if (!entered && typeof onToggleFull === 'function') {
+        onToggleFull();
+    }
   }
 
-  const handleClose = async () => {
-    if (document.fullscreenElement) await exitNativeFullscreen()
-    onClose()
+  const handleClose = async (e) => {
+    // Prevent the click from bubbling up to the backdrop if clicking the button
+    if (e) e.stopPropagation();
+    
+    if (document.fullscreenElement) {
+        await exitNativeFullscreen();
+    }
+    // Defensive Fix: Ensure onClose exists before calling it
+    if (typeof onClose === 'function') {
+        onClose();
+    }
   }
 
   useEffect(() => {
@@ -59,17 +69,14 @@ export default function PreviewModal({ open, url, type, name, full = false, onCl
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [open])
+  }, [open, isNativeFullscreen])
 
   if (!open) return null
 
   const renderContent = () => {
-    if (!url) return <p>Preview not available.</p>
+    if (!url) return <p style={{ padding: '20px', textAlign: 'center' }}>Preview not available.</p>
     if (type?.startsWith('image/')) {
       return <img src={url} alt={name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-    }
-    if (type === 'application/pdf') {
-      return <iframe src={url} style={{ width: '100%', height: '100%', border: 'none' }} title={name} />
     }
     return <iframe src={url} style={{ width: '100%', height: '100%', border: 'none' }} title={name} />
   }
@@ -95,24 +102,30 @@ export default function PreviewModal({ open, url, type, name, full = false, onCl
               type="button"
               onClick={handleToggleFullscreen}
               className="preview-action-btn"
-              aria-label={document?.fullscreenElement ? 'Exit fullscreen' : 'Enter fullscreen'}
-              title={document?.fullscreenElement ? 'Exit fullscreen' : 'Enter fullscreen'}
+              aria-label={isNativeFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+              title={isNativeFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
             >
-              {/* icon-only button */}
-              {document?.fullscreenElement ? (
-                // "minimize" icon (single square)
+              {isNativeFullscreen ? (
                 <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
                   <rect x="6" y="6" width="12" height="12" rx="2" fill="none" stroke="currentColor" strokeWidth="2" />
                 </svg>
               ) : (
-                // "fullscreen" icon (double square)
                 <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
                   <rect x="7" y="7" width="12" height="12" rx="2" fill="none" stroke="currentColor" strokeWidth="2" />
                   <path d="M6 16V6h10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               )}
             </button>
-            <button type="button" onClick={handleClose} className="close-btn">Close</button>
+            
+            {/* UPDATED BUTTON: Icon only with square styling */}
+            <button 
+              type="button" 
+              onClick={handleClose} 
+              className="preview-close-btn"
+              title="Close"
+            >
+              ✕
+            </button>
           </div>
         </header>
         <div className="preview-body">

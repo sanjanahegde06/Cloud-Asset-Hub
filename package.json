@@ -4,7 +4,7 @@
   "description": "Cloud Asset Hub — manage your user files and assets with Supabase",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "next lint",
@@ -12,9 +12,15 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.76.1",
+    "ai": "^3.1.0",
+    "axios": "^1.6.5",
+    "dotenv": "^16.4.5",
+    "langchain": "^0.2.3",
     "next": "16.1.0",
+    "pdf-parse": "^1.1.1",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "react-markdown": "^10.1.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",

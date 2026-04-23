@@ -1,41 +1,77 @@
 # Cloud Asset Hub
 
-Cloud Asset Hub: a Next.js app using Supabase Auth and Storage to upload, preview, download and manage user files.
+Cloud Asset Hub is a full-stack Next.js application that allows users to securely manage files in the cloud using Supabase for authentication and storage, with an AI-powered feature to chat with uploaded files.
 
-## Overview
-Cloud Asset Hub is a Next.js application that allows users to manage their files in the cloud using Supabase for authentication and storage. Users can sign up, log in, upload files, and view or delete their uploaded files from a user-friendly dashboard.
+---
 
-## Features
-- **User Authentication**: Users can sign up and log in using their email and password through Supabase Auth.
-- **File Upload**: Users can upload files to Supabase Storage.
-- **File Management**: Users can view a list of their uploaded files, download them, and delete them as needed.
-- **Protected Routes**: Certain pages are protected and can only be accessed by authenticated users.
+## 🚀 Features
 
-## Project Structure
+###  Authentication
+- Signup and login using Supabase Auth
+- Secure session handling
+- Protected routes
+
+###  File Management
+- Upload files to Supabase Storage
+- View uploaded files
+- Download files
+- Delete files
+- Preview files (PDF, images, text)
+
+###  AI Chat with Files
+- Chat with uploaded files (PDF, TXT, MD)
+- Ask questions about file content
+- Context-aware responses using vector search
+- Dedicated chat page (`/chat/[fileName]`)
+
+
+---
+
+## 📂 Project Structure
 ```
 cloud-asset-hub
 ├── components
+│   ├── FileChat.js
 │   ├── FileList.js
 │   ├── Layout.js
 │   ├── ProtectedRoute.js
-│   └── UploadForm.js
+│   ├── UploadForm.js
+│   └── PreviewModal.js
+│
+├── context
+│   └── AuthContext.js
+│
 ├── lib
-│   └── supabase.js
+│   ├── supabaseClient.js
+│   ├── chunkingUtils.js
+│   ├── vectorStore.js
+│   └── llmFallback.js
+│
 ├── pages
 │   ├── _app.js
-│   ├── api
-│   │   ├── auth.js
-│   │   ├── delete.js
-│   │   ├── files.js
-│   │   └── upload.js
-|   ├── dashboard.js
 │   ├── index.js
+│   ├── dashboard.js
 │   ├── profile.js
-|   ├── reset-password.ja
-│   └── signup.js
+│   ├── signup.js
+│   ├── reset-password.js
+│   │
+│   ├── chat
+│   │   └── [fileName].js
+│   │
+│   └── api
+│       ├── auth.js
+│       ├── delete.js
+│       ├── files.js
+│       ├── upload.js
+│       │
+│       └── chat
+│           ├── query.js
+│           └── processFile.js
+│
 ├── public
 ├── styles
 │   └── globals.css
+│
 ├── .env.local
 ├── .gitignore
 ├── next.config.js
@@ -58,8 +94,14 @@ cloud-asset-hub
    ```
 4. Create a `.env.local` file in the root directory and add your Supabase credentials:
    ```
-   NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-supabase-anon-key>
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# At least one AI provider key is required
+OPENAI_API_KEY=your_key
+GROQ_API_KEY=your_key
+GOOGLE_API_KEY=your_key
+OPENROUTER_API_KEY=your_key
    ```
 5. Run the development server:
    ```

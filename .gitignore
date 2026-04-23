@@ -12,8 +12,7 @@ out/
 
 # env files
 .env.local
-.env
-.env.*              # optional: ignore any other env variants
+.env.*.local              # optional: ignore any other env variants
 !.env.example       # optional: keep a template in repo
 
 # Snyk Security Extension - AI Rules (auto-generated)
