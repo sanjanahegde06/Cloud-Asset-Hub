@@ -95,14 +95,15 @@ cloud-asset-hub
 4. Create a `.env.local` file in the root directory and add your Supabase credentials:
    ```
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+   
 ## At least one AI provider key is required
 ```
-OPENAI_API_KEY=your_key
-GROQ_API_KEY=your_key
-GOOGLE_API_KEY=your_key
-OPENROUTER_API_KEY=your_key
+   OPENAI_API_KEY=your_key
+   GROQ_API_KEY=your_key
+   GOOGLE_API_KEY=your_key
+   OPENROUTER_API_KEY=your_key
    ```
 5. Run the development server:
    ```
